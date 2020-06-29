@@ -1,6 +1,6 @@
 
-import React, {useEffect, useState, ChangeEvent} from 'react';
-import {Link} from 'react-router-dom'; 
+import React, {useEffect, useState, ChangeEvent, FormEvent} from 'react';
+import {Link, useHistory} from 'react-router-dom'; 
 import { FiArrowLeft } from 'react-icons/fi';
 import axios from 'axios';
 import {LeafletMouseEvent, LeafletEvent} from 'leaflet';
@@ -41,6 +41,8 @@ const CreatePoint = ()=>{
     const [selectedPosition, setSelectPosition] = useState<[number, number]>([0, 0]);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const [selectedFile, setSelectedFile] = useState<File>();
+
+    const history = useHistory();
 
     useState(()=>{
         navigator.geolocation.getCurrentPosition(position=>{
@@ -111,8 +113,27 @@ const CreatePoint = ()=>{
         }
        
     }
-    function handleSubbmit(){
-        
+    async function handleSubbmit(event: FormEvent){
+        event.preventDefault();
+        const{name, email, whatsapp}=formData;
+        const uf = selectdUf;
+        const city=selectedCity;
+        const [latitude, longitude]=selectedPosition;
+        const items = selectedItems;
+
+        const data={
+            name,
+            email,
+            whatsapp,
+            uf,
+            city,
+            latitude,
+            longitude,
+            items
+        };
+        await api.post('points',data);
+        alert('Ponto de coleta criado');
+        history.push('/');
     }
 
     return(
@@ -125,7 +146,7 @@ const CreatePoint = ()=>{
                 </Link>
             </header>
 
-            <form>
+            <form onSubmit={handleSubbmit}>
             <h1>Cadastro do<br/> ponto de coleta</h1>
             <fieldset>
                 <legend>
