@@ -8,9 +8,16 @@ import api from '../../services/api';
 import './styles.css';
 
 import logo from '../../assets/logo.svg'
+//arry ou objeto: manualmente informar o tipo da variavel
+
+interface Item{
+    id: number;
+    title:string;
+    image_url:string;
+}
 
 const CreatePoint = ()=>{
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState<Item[]>([]);
 
     useEffect(()=>{
         api.get('items').then(response=>{
@@ -103,8 +110,8 @@ const CreatePoint = ()=>{
                 <ul className="items-grid">
                     {items.map(item =>(
                         <li>
-                        <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste"/>
-                        <span>Lampadas</span>
+                        <img src={item.image_url} alt={item.title}/>
+                    <span>{item.title}</span>
                     </li>
                    
                     ))}
